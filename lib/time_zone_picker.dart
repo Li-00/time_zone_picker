@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:logging/logging.dart';
+import 'package:flutter/foundation.dart';
 
 class TimeZonePicker extends StatefulWidget {
   const TimeZonePicker({super.key});
@@ -22,6 +24,8 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
   String _displayedTime = '';
   List<String> _timeZones = [];
 
+  final Logger _logger = Logger('TimeZonePicker');
+
   @override
   void initState() {
     super.initState();
@@ -33,13 +37,15 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
   Future<void> _loadTimeZones() async {
     try {
       final timeZones = await FlutterTimezone.getAvailableTimezones();
-      print('Loaded timezones: ${timeZones.length}');
+      if (kDebugMode) {
+        _logger.info('Loaded timezones: ${timeZones.length}');
+        _logger.info('First few zones: ${timeZones.take(5)}');
+      }
       setState(() {
         _timeZones = timeZones;
       });
-      print('First few zones: ${timeZones.take(5)}');
     } catch (e) {
-      print('Error loading timezones: $e');
+      _logger.severe('Error loading timezones: $e');
     }
   }
 
@@ -70,7 +76,7 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
     if (_selectedTimeZone == null) {
       // 如果没有选择时区，显示提示
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('请先选择时区')),
+        const SnackBar(content: Text('请先选择时区')),
       );
       return;
     }
@@ -85,8 +91,7 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
     );
   }
 
-  // 新增搜索建议方法
-  Iterable<Widget> _getSuggestions(String query) {
+  Iterable<Widget> _getTimeZoneList(String query) {
     final lowercaseQuery = query.toLowerCase();
     return _timeZones.where((timezone) {
       return timezone.toLowerCase().contains(lowercaseQuery);
@@ -100,6 +105,7 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
               _updateSelectedTime(_selectedTime!, timezone);
             }
           });
+          Navigator.pop(context);
         },
       );
     });
@@ -113,7 +119,7 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SwitchListTile(
-            title: Text('自动获取系统时间'),
+            title: const Text('自动获取系统时间'),
             value: _isAutoTime,
             contentPadding: EdgeInsets.zero,
             onChanged: (value) {
@@ -131,7 +137,7 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
               builder: (context, controller) {
                 return SearchBar(
                   controller: controller,
-                  padding: const MaterialStatePropertyAll<EdgeInsets>(
+                  padding: const WidgetStatePropertyAll<EdgeInsets>(
                     EdgeInsets.symmetric(horizontal: 16.0),
                   ),
                   onTap: () {
@@ -155,7 +161,7 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
                 );
               },
               suggestionsBuilder: (context, controller) {
-                return _getSuggestions(controller.text);
+                return _getTimeZoneList(controller.text);
               },
             ),
             if (_selectedTimeZone != null) ...[
@@ -173,7 +179,7 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => _selectTimeZoneAndTime(),
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text('选择时间'),
               ),
@@ -185,18 +191,18 @@ class _TimeZonePickerState extends State<TimeZonePicker> {
               padding: EdgeInsets.all(16),
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     '当前显示时间',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     _displayedTime,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ],
               ),
