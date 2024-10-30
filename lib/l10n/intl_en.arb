@@ -1,0 +1,10 @@
+{
+  "@@locale": "en",
+  "autoGetSystemTime": "Automatically get system time",
+  "pleaseSelectTimeZone": "Please select a time zone",
+  "selectTime": "Select Time",
+  "timeZonePicker":"TimeZonePicker",
+  "searchTimeZone":"SearchTimeZone",
+  "currentDisplayedTime":"CurrentDisplayedTime",
+  "pleaseSelectTimeZone":"PleaseSelectTimeZone"
+}

@@ -1,0 +1,9 @@
+{
+  "@@locale": "zh",
+  "autoGetSystemTime": "自动获取系统时间",
+  "pleaseSelectTimeZone": "请先选择时区",
+  "selectTime": "选择时间",
+  "timeZonePicker":"时区选择器",
+  "searchTimeZone":"查找时区",
+  "currentDisplayedTime":"当前时间",
+}
