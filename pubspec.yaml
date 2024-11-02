@@ -14,7 +14,6 @@ flutter_intl:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
   flutter_datetime_picker_plus: ^2.2.0
   intl: ^0.19.0
   flutter_timezone: ^3.0.1
